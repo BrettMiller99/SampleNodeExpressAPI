@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Sample API
 
 This is a sample API built with NodeJS and Express.
@@ -16,3 +17,7 @@ This is a sample API built with NodeJS and Express.
 - `PORT`: The port number to listen on (default: 3000)
 - `NODE_ENV`: The environment (default: development)
 - `SECRET_KEY`: The secret key for JWT authentication
+=======
+# SampleNodeExpressAPI
+A very simple Users API.
+>>>>>>> main
