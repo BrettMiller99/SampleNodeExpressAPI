@@ -1,156 +1,294 @@
-# Instrumenting Code With OTEL
+# Database Schema Changes - Repo Link
 
-This repository contains a sample Node.js Express application used to demonstrate how to instrument code with OpenTelemetry (OTEL) using Cascade.
+## 1 · Problem Statement
 
-## 1. Problem Statement
+Database schema changes are a critical yet challenging aspect of application development. As applications evolve, their data models must adapt to support new features, improve performance, or fix design issues. However, implementing schema changes safely across environments presents significant complexity. Organizations need to modify database structures without data loss, service disruption, or breaking existing functionality. This process typically involves creating migration scripts, updating application code to work with the new schema, ensuring backward compatibility during deployment, and validating data integrity—all while maintaining system availability. The complexity increases exponentially in distributed systems with multiple services sharing database resources, where coordinated changes must be carefully orchestrated to prevent cascading failures.
 
-Instrumenting applications with OpenTelemetry (OTEL) is crucial for modern observability but presents significant complexity. Organizations need comprehensive visibility into their distributed systems to identify performance bottlenecks, troubleshoot issues, and understand user experiences. However, manually adding OTEL instrumentation across an entire codebase requires deep technical knowledge of both the application architecture and the OTEL framework. Developers must carefully integrate tracing, metrics, and logging without introducing performance overhead or disrupting existing functionality. This process typically involves modifying numerous files, ensuring proper context propagation across service boundaries, and configuring exporters to send telemetry data to backend systems—all while maintaining code readability and maintainability.
+## 2 · Key Challenges
 
-## 2. Key Challenges
+- **Migration Safety and Data Integrity:** Ensuring schema changes don't result in data loss or corruption, particularly when transforming existing data to fit new structures.
+- **Deployment Coordination:** Synchronizing database changes with application code updates to maintain system functionality throughout the deployment process.
+- **Backward Compatibility:** Supporting both old and new schema versions during transitional periods to enable gradual rollouts and potential rollbacks.
+- **Testing Complexity:** Creating comprehensive test scenarios that verify both the migration process and application behavior with the new schema.
+- **Performance Impact:** Managing the performance implications of schema changes, especially for large tables where operations like adding columns or indexes can cause significant downtime.
+- **Dependency Management:** Identifying and updating all code paths affected by schema changes, including reports, APIs, and integrations that may break.
+- **Version Control:** Tracking schema changes alongside code changes in version control systems to maintain a complete history of the database evolution.
+- **Environment Parity:** Ensuring consistent schema changes across development, testing, and production environments to prevent environment-specific bugs.
 
-*   **Complex Configuration Setup:** Initializing the OTEL SDK with appropriate resources, exporters, and instrumentations requires detailed knowledge of the OTEL API.
-*   **Comprehensive Coverage:** Ensuring all critical paths in the application are properly instrumented without missing important transactions.
-*   **Context Propagation:** Maintaining trace context across asynchronous operations, service boundaries, and different execution contexts.
-*   **Performance Impact:** Adding instrumentation without introducing significant overhead to application performance.
-*   **Consistent Attribute Naming:** Maintaining consistency in span and attribute naming conventions across the codebase.
-*   **Integration with Existing Logging:** Harmonizing OTEL with existing logging frameworks for a unified observability solution.
-*   **Manual Boilerplate:** Writing repetitive instrumentation code for similar operations across different components.
-*   **Keeping Up with OTEL Evolution:** The OTEL specification and libraries are still evolving, requiring ongoing maintenance.
+## 3 · Tasks Windsurf can help accelerate
 
-## 3. How Windsurf Accelerates OTEL Instrumentation
+- **Automated Schema Analysis and Migration Generation:** Windsurf can significantly accelerate database schema changes by analyzing the current database structure and automatically generating appropriate migration scripts. Using Cascade's capabilities, it can identify the safest migration path, suggest proper data transformations, and create idempotent scripts that can be safely run multiple times. This reduces the risk of errors and ensures consistent schema changes across all environments.
+- **Intelligent Code Refactoring:** When database schemas change, application code must be updated to work with the new structure. Windsurf can automatically identify all code locations affected by schema changes and suggest or implement the necessary updates. It can detect references to modified tables or columns throughout the codebase, update SQL queries, and refactor ORM models to maintain compatibility with the new schema.
+- **Comprehensive Impact Analysis:** Before implementing schema changes, Windsurf can perform a thorough impact analysis to identify potential risks and dependencies. It can map out all application components that interact with the affected database objects, estimate downtime requirements, and suggest mitigation strategies for high-risk changes. This helps developers make informed decisions about how and when to implement changes.
+- **Documentation Generation:** Windsurf can automatically generate comprehensive documentation for schema changes, including entity-relationship diagrams, change logs, and rollback procedures. This documentation helps team members understand the database evolution and provides critical reference information for troubleshooting and future development.
+- **Migration Testing Automation:** Windsurf can help create and execute test cases that verify both the migration process and application functionality with the new schema. It can generate test data that exercises edge cases, simulate migration failures, and validate data integrity after migration. This comprehensive testing reduces the risk of unexpected issues in production.
 
-*   **Automated Instrumentation Analysis and Implementation:** Windsurf can analyze the codebase structure and automatically identify key instrumentation points. Using Cascade's AI capabilities, it can generate appropriate instrumentation code for different components, such as the middleware and utility functions we see in this Express application. Windsurf can intelligently suggest where to add custom spans, what attributes to include, and how to properly propagate context across asynchronous boundaries.
-*   **Intelligent Refactoring:** When OTEL libraries evolve or when instrumentation patterns need to be updated, Windsurf can help refactor existing instrumentation code across the entire codebase. It can identify all instances where instrumentation is applied and suggest consistent updates, ensuring the codebase remains aligned with current best practices.
-*   **Documentation Generation:** Windsurf can automatically generate documentation that explains the instrumentation strategy, including diagrams of trace flows and explanations of key metrics. This helps new team members understand how observability is implemented in the application and how to extend it for new features.
-*   **Configuration Management:** The sequential-thinking MCP can help developers reason through complex OTEL configuration decisions, such as sampling rates, exporter configurations, and resource attribute definitions. By breaking down these decisions into logical steps, Windsurf helps ensure the instrumentation is optimized for the specific application needs.
-*   **Real-time Feedback:** As developers write code, Windsurf can provide real-time suggestions for improving instrumentation coverage or fixing potential issues with context propagation. This immediate feedback loop helps catch observability gaps before they reach production.
-
-By leveraging these capabilities, Windsurf transforms what would typically be a tedious, error-prone process into a streamlined workflow that produces higher quality instrumentation with less developer effort. The result is more comprehensive observability that provides actionable insights into application behavior without sacrificing development velocity.
-
-## Recommended Rules
-
-### OTel Rules
-
-1. **Standardize Naming Conventions:**  
-   All services must be identified with a `service.name` attribute (e.g., `user-api`, `payment-processor`).  
-   Span names should clearly describe the operation being performed, using a `verb noun` format (e.g., `HTTP GET`, `Save User`).
-
-2. **Enrich Spans with Meaningful Attributes:**  
-   Every span should be enriched with relevant attributes that provide context.  
-   - For HTTP requests, include `http.method`, `http.route`, and `http.status_code`.  
-   - For database calls, include `db.system` and `db.statement`.  
-   - For business logic, include relevant identifiers like `user.id` or `order.id`.
-
-3. **Prioritize Critical User Journeys:**  
-   Instrumentation should focus on tracing end-to-end critical user journeys.  
-   Before implementing, always create a plan that identifies these paths (e.g., user registration, product purchase) and ensures that trace context is propagated across all services involved.
+By leveraging these capabilities, Windsurf transforms database schema management from a high-risk, manual process into a streamlined, reliable workflow. The result is faster, safer database evolution that supports continuous delivery without compromising data integrity or application stability.
 
 ---
 
-## Recommended Workflows
+## Recommended Workflow
 
-### /instrument-service
+### /update-schema Workflow
 
-This workflow guides Cascade through a comprehensive process for instrumenting a new or existing service with OpenTelemetry.
+**Description:** This workflow guides Cascade through a comprehensive process for implementing database schema changes safely and effectively.
 
-1. **Analyze Codebase:**  
-   - Perform a deep analysis of the project to identify key business logic, critical user paths, and data flows.  
-   - Pay special attention to API endpoints, database interactions, external API calls, and asynchronous message queues.
+**1. Analyze Current Schema**
+When initiating the workflow, Cascade will:
+- Perform a deep analysis of the existing database schema, identifying:
+  - Tables, columns, and their data types
+  - Relationships and constraints
+  - Indexes and their usage patterns
+  - Table sizes and growth patterns (when available)
+- Examine how the application code interacts with the database:
+  - Identify ORM models and their properties
+  - Analyze queries and data access patterns
+  - Map relationships between models
+  - Identify validation rules and business logic
+- Identify any existing migration mechanisms or patterns used in the project:
+  - Migration framework in use (if any)
+  - Directory structure for migrations
+  - Naming conventions for migration files
+  - Migration execution process
 
-2. **Propose Instrumentation Plan:**  
-   - Based on your analysis, create a detailed instrumentation plan. This plan must include:  
-     - A list of required OpenTelemetry packages to be installed.  
-     - The creation of a central `tracing.js` (or equivalent) configuration file.  
-     - Modifications needed for the application's entry point to initialize tracing.  
-     - Specific recommendations for adding custom spans to critical business functions (e.g., `createUser`, `processPayment`), including suggested attributes for each span.
-
-3. **Request User Approval:**  
-   - Present the complete plan to me for review.  
-   - Explicitly ask: "Does this plan look good to you? Shall I proceed with the implementation?"  
-   - **Do not proceed without my explicit approval.**
-
-4. **Implement Plan:**  
-   - Once I approve, execute the plan by modifying the necessary files and installing the required dependencies.  
-   - After implementation, confirm that the changes have been made and the application is ready for testing.
-
-## 4. Demo Guide
-
-### Set-Up
-
-*   **Model used when testing script:** Gemini 2.5 Pro
-*   **Planning Mode:** ON
-*   **Application to view OTEL Traces:** [otel-desktop-viewer](https://github.com/CtrlSpice/otel-desktop-viewer)
-
-### Installation (Terminal - Brew)
-
-```bash
-brew tap CtrlSpice/homebrew-otel-desktop-viewer
-brew install otel-desktop-viewer
+*Example prompt:*
+```
+/update-schema I need to add user profile information (age, address, phone) to our User model and rename the 'name' field to 'fullName'.
 ```
 
-### Running otel-desktop-viewer
+**2. Propose Schema Changes**
+Based on requirements and analysis, Cascade will create a detailed schema change plan that includes:
+- Specific changes to make:
+  - New tables/columns to be added
+  - Modified fields (renames, type changes, constraint changes)
+  - New relationships or constraints
+  - Changes to indexes
+- Migration strategy with step-by-step implementation approach:
+  - Sequence of migration files to create
+  - Order of operations to minimize risk
+  - Handling of existing data
+- Required code changes to support the new schema:
+  - Updates to ORM models
+  - Changes to queries and data access code
+  - Updates to validation logic
+  - UI changes to support new fields
+- Data transformation logic for existing records:
+  - How to populate new fields
+  - How to handle data type conversions
+  - Validation of transformed data
+- Estimated impact on application performance and functionality:
+  - Potential downtime requirements
+  - Performance implications of schema changes
+  - Backward compatibility considerations
 
-Once installed, run `otel-desktop-viewer` in your terminal. This will launch the viewer, which you can access in your browser at `http://localhost:8080`.
+*Example plan output:*
+```markdown
+## Schema Change Plan: Add User Profile Information
+
+### 1. Database Changes
+- Add columns to Users table:
+  - age (INTEGER, nullable)
+  - address (STRING, nullable)
+  - phone (STRING, nullable)
+- Rename column 'name' to 'fullName'
+
+### 2. Migration Strategy
+1. Create migration file '001_add_user_profile_fields.js'
+   - Add new columns (age, address, phone)
+2. Create migration file '002_rename_name_to_fullName.js'
+   - Add fullName column (nullable initially)
+   - Copy data from name to fullName
+   - Update fullName to be non-nullable
+   - Remove name column
+
+### 3. Code Changes
+- Update User model to include new fields
+- Modify UserController methods to handle new fields
+- Update validation logic in routes
+- Update tests to verify new fields
+
+### 4. Data Transformation
+- No complex transformations needed
+- Simple copy from name to fullName
+
+### 5. Impact Assessment
+- Minimal downtime required
+- No performance concerns identified
+- Will require application restart after migration
+```
+
+**3. Request User Approval**
+Before proceeding with implementation, Cascade will:
+- Present the complete plan for review, including visual representations of before/after schema when possible
+- Highlight potential risks or areas requiring special attention
+- Explicitly ask for approval: "Does this schema change plan look good to you? Shall I proceed with implementation?"
+- Wait for explicit approval before proceeding
+
+**4. Implement Changes**
+Once approved, Cascade will execute the plan by:
+- Creating migration scripts following project conventions:
+  - Properly versioned and named
+  - Including both up and down methods
+  - Implementing data transformation logic
+  - Adding appropriate error handling
+- Updating ORM models to reflect the new schema:
+  - Adding new fields with proper types and constraints
+  - Updating validation rules
+  - Modifying relationships if needed
+- Modifying application code to work with the updated schema:
+  - Updating controllers to handle new fields
+  - Modifying service layer logic
+  - Updating API responses to include new fields
+- Adding data validation to ensure integrity:
+  - Input validation for new fields
+  - Consistency checks for transformed data
+  - Error handling for constraint violations
+- Updating tests to verify functionality:
+  - Unit tests for model changes
+  - Integration tests for API endpoints
+  - Migration tests to verify data integrity
+
+*Example implementation:*
+```javascript
+// migrations/001_add_user_profile_fields.js
+'use strict';
+
+module.exports = {
+  up: async (queryInterface, Sequelize) => {
+    await queryInterface.addColumn('Users', 'age', {
+      type: Sequelize.INTEGER,
+      allowNull: true
+    });
+    await queryInterface.addColumn('Users', 'address', {
+      type: Sequelize.STRING,
+      allowNull: true
+    });
+    await queryInterface.addColumn('Users', 'phone', {
+      type: Sequelize.STRING,
+      allowNull: true
+    });
+  },
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.removeColumn('Users', 'age');
+    await queryInterface.removeColumn('Users', 'address');
+    await queryInterface.removeColumn('Users', 'phone');
+  }
+};
+```
+
+**5. Verify Changes**
+After implementation, Cascade will:
+- Run migrations in a test environment:
+  - Execute migration scripts
+  - Verify schema changes were applied correctly
+  - Check for any errors or warnings
+- Execute tests to verify application functionality:
+  - Run existing test suite to ensure no regressions
+  - Execute new tests specific to schema changes
+  - Test API endpoints with new schema
+- Validate data integrity after migration:
+  - Verify data was transformed correctly
+  - Check constraints are enforced properly
+  - Ensure relationships work as expected
+- Document the changes and provide a summary:
+  - List of files modified
+  - Summary of schema changes implemented
+  - Instructions for deployment
+  - Rollback procedure if needed
+
+*Example verification steps:*
+```
+1. Run migrations:
+   npx sequelize-cli db:migrate
+
+2. Verify schema changes:
+   - Check Users table structure
+   - Confirm new columns exist with correct types
+   - Verify name column was renamed to fullName
+
+3. Run tests:
+   npm test
+
+4. Manual verification:
+   - Start application: npm start
+   - Create user with profile information
+   - Retrieve user and verify profile data
+   - Update user profile and verify changes
+```
+
+### Best Practices for Using This Workflow
+
+- **Be Specific in Requirements:** Clearly describe what schema changes you need and why. Include any specific constraints or requirements.
+- **Review Plans Carefully:** Take time to review the proposed plan before approving implementation. Pay special attention to data transformation steps and potential risks.
+- **Test in Development First:** Always run migrations in development or staging environments before applying to production.
+- **Keep Backups:** Ensure you have database backups before running migrations in production.
+- **Monitor Performance:** After schema changes, monitor application performance to identify any unexpected issues.
+- **Document Changes:** Maintain documentation of schema changes for future reference and onboarding.
+
+### Recommended Rules
+
+- **Version All Schema Changes:** All database changes must be implemented as versioned migration scripts (e.g., `001_add_user_profile.js`, `002_rename_email_column.js`). Never modify existing migration files after they've been committed to version control.
+- **One-Way Migrations with Rollback Plans:** Design migrations to be one-way (forward only) but always include a documented rollback procedure for emergencies. Test both the migration and its rollback before deploying to production.
+- **Incremental Changes Only:** Break complex schema changes into smaller, incremental changes that can be deployed independently. For example, instead of renaming a column in one step, add the new column, update code to use both columns, migrate data, then remove the old column.
+- **Preserve Data Integrity:** Every migration must include data transformation logic when schema changes affect existing data. Always validate data before and after migration to ensure integrity is maintained.
+- **Coordinate Code and Schema Changes:** Deploy schema changes and corresponding code updates together in a coordinated manner. Use feature flags to decouple feature releases from schema changes when necessary.
 
 ---
 
-### Presenting the Demo: A Step-by-Step Guide
+## 4 · Video Script
 
-#### Introduction: Setting the Stage
+**Set-up:**
+- **Model used when testing script:** Claude 3.7 Sonnet
+- **Planning Mode turned OFF**
+- **Note:** The repo includes the rule + workflow file already. This video might need to be sped up, the migration can take a second.
+- **Application utilized to view SQLite DB:** [https://sqlitebrowser.org/dl/](https://sqlitebrowser.org/dl/)
 
-To begin, open the `SampleNodeExpressAPI` project in your Windsurf IDE. You can start by saying something like:
+**(0:00-0:20) Introduction**
+[Scene: Windsurf IDE is open, showing the SampleNodeExpressAPI project.]
 
-> "Getting started with OpenTelemetry is powerful, but it can be complex. Today, I'll show you how Cascade, our agentic AI coding assistant, can guide you through instrumenting a Node.js application. We won't just be writing code; we'll be building and implementing a robust observability solution from the ground up, step-by-step."
+**Narrator:** "Database schema changes are critical for evolving applications but can be risky and complex. In this video, we'll show you how Cascade, your agentic AI coding assistant, can help you implement database schema changes safely and efficiently—not just by writing migration scripts, but by helping you plan, implement, and verify schema changes with minimal risk."
 
-#### Step 1: Analysis and Planning
+**(0:20-1:00) Step 1: Analysis and Planning**
+[Scene: The user types their initial, high-level goal into the Cascade chat.]
 
-Next, demonstrate how Cascade can take a high-level goal and create a concrete plan. In the chat, enter the following prompt:
+**Narrator:** "We'll start by giving Cascade our goal. We want to enhance our user model by adding profile information, but we're not sure of the best approach. We'll ask it to analyze the current schema and propose a plan."
 
-> **Prompt:**
-> ```
-> I want to instrument this Node.js application with OpenTelemetry. Analyze the code and propose a plan. Ensure the OpenTelemetry package versions are consistent throughout the project.
-> OpenTelemetry documentation can be found at: 
-> @web https://opentelemetry.io/docs/concepts/instrumentation/code-based/.
-> We are using otel-desktop-viewer as an OTEL collector, documentation can be found at:
-> @web  https://github.com/CtrlSpice/otel-desktop-viewer
-> I want my service.name to be “SampleExpressAPI”
-> ```
+*Prompt on screen:*
+```
+I need to enhance our User model by adding profile information like age, address, and phone number. I also want to rename the 'name' field to 'fullName' for clarity. Analyze the current schema and propose a plan for these changes.
+```
 
-As you enter the prompt, explain what's happening:
+[Scene: Show Cascade's tool calls exploring the codebase and the resulting plan being created and displayed.]
 
-> "We'll start by giving Cascade our high-level goal. We want to instrument this app, but we're not sure of the best approach. We're asking it to analyze the code, consult the official documentation we've provided, and propose a plan."
+**Narrator:** "Cascade immediately explores the project, analyzing the current database schema and how the application interacts with it. It creates a clear, actionable plan that includes creating migration scripts, updating the User model, modifying controllers, and ensuring data integrity during the transition. The plan looks great, so let's execute it."
 
-Cascade will then use its tools to explore the project and generate a step-by-step plan. You can highlight this on screen and say:
+**(1:00-2:00) Step 2: Implementing Schema Changes**
+[Scene: A rapid sequence showing Cascade's actions. Creating migration files, updating the User model, modifying controllers to use the new fields, and updating tests.]
 
-> "As you can see, Cascade has created a clear, actionable plan. It's identified the need to install specific OTEL packages, create a dedicated `tracing.js` file for configuration, and modify our main `app.js` file. This looks great, so let's tell it to proceed."
+**Narrator:** "Now, we'll execute the plan. Cascade creates migration scripts that safely add new columns and rename existing ones. It updates the User model to include the new fields and adds proper validation. It then modifies all controllers and routes that interact with user data to accommodate the new schema. Finally, it updates tests to verify everything works correctly with the new structure."
 
-#### Step 2: Automated Implementation
+**(1:45-2:30) Step 3: Verification and the "Aha!" Moment**
+[Scene: The user asks Cascade to test the newly updated application.]
 
-Now, it's time to execute the plan. You can show the rapid sequence of Cascade's actions: modifying `package.json`, creating `tracing.js`, and updating `app.js`.
+**Narrator:** "With the schema changes complete, let's test the application to ensure everything works as expected."
 
-> "With our approval, Cascade gets to work. It adds the required dependencies to `package.json`, generates the core `tracing.js` file to initialize the OpenTelemetry SDK, and modifies our application's entry point. It even adds a custom span to our 'create user' route to trace that specific operation, all without us writing a single line of code."
+*Prompt on screen:*
+```
+Test the application with the new schema changes to verify everything works correctly.
+```
 
-#### Step 3: Verification and Seeing the Results
+[Scene: Cascade runs the migrations, starts the server, and tests the API endpoints with the new schema.]
 
-With the instrumentation in place, it's time to verify that it works. Ask Cascade to test the application:
+**Note:** Depending on how the migration is enforced, it should be relatively consistent given the rules+workflow; a test error might be encountered. Cascade should reason through this. Could spin another talk-track here - “Cascade is smart enough to recognize and resolve XYZ, this is why you should always test” etc.
 
-> **Prompt:**
-> ```
-> Test the routes in this application, to ensure otel is instrumented correctly.
-> ```
+**Narrator:** "Cascade runs the migrations, which execute flawlessly. It then starts the server and tests the API endpoints, creating users with the new profile fields and verifying that the renamed 'fullName' field works correctly. Let's look at the database to see the changes."
 
-As Cascade starts the server and runs the tests, you can explain:
+**(2:30-3:00) Step 4: The Complete Picture**
+[Scene: Switch to DB Browser for SQLite showing the updated database schema with the new columns and renamed field.]
 
-> "Now for the 'aha!' moment. We'll ask Cascade to start the application and test the endpoints. As it runs these tests, let's switch over to our OpenTelemetry viewer."
+**Narrator:** "And there it is! Our database schema has been successfully updated with the new profile fields, and the 'name' field has been renamed to 'fullName'. All our application code has been updated to work with these changes, and our tests confirm everything is functioning correctly. This is the power of combining a clear plan with automated execution through Cascade."
 
-#### Step 4: The Complete Picture
+**(3:00-3:15) Conclusion**
+[Scene: Quickly scroll through the modified files, showing the clean, well-structured code. End on the Windsurf logo.]
 
-Switch your screen to the `otel-desktop-viewer`. As the tests run, traces will appear in real-time.
-
-> "And there it is! With just a few high-level prompts, we have a complete, rich trace showing the incoming request automatically captured by OpenTelemetry. We can see the entire lifecycle of the request through our application, from the initial HTTP request down to the specific database queries. This is the power of combining a clear plan with automated execution."
-
-#### Conclusion: From Goal to Solution
-
-To conclude, quickly scroll through the modified files, showing the clean, well-structured code that Cascade produced.
-
-> "In just a few minutes, we went from a high-level goal to a fully instrumented application with a comprehensive tracing solution. Cascade didn't just write code; it understood our intent, created a plan, and executed it perfectly. That's the power of agentic AI with Cascade."
+**Narrator:** "In just a few minutes, we went from a simple schema change request to a fully implemented and tested solution. Cascade didn't just write code; it understood our goal, created a comprehensive plan that minimized risk, and executed it perfectly. That's the power of Cascade."
