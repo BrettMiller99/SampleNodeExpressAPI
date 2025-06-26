@@ -3,8 +3,8 @@ description: This workflow analyzes OpenTelemetry trace data to identify perform
 ---
 
 Collect trace data for analysis:
-     - Identify endpoints to analyze through OpenTelemetry trace data or user specification
-     - Filter trace data by endpoint, time range, and error status
+     - Identify endpoints to analyze through performance metrics or user specification
+     - Gather execution times, resource usage, and error rates
      - Calculate key metrics like p95/p99 latency, error rate, and frequency
 Identify performance bottlenecks:
      - Analyze span durations to find the slowest operations

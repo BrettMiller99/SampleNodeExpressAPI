@@ -3,7 +3,6 @@ description: This workflow identifies and optimizes ineffecient database operati
 ---
 
 Analyze database operations:
-     - Extract database operations from OpenTelemetry spans
      - Identify slow queries, excessive queries, or n+1 query patterns
      - Calculate frequency and duration statistics for each operation
      - Detect query patterns that could benefit from optimization
@@ -18,10 +17,9 @@ Implement optimizations:
      - Implement caching mechanisms for frequently accessed data
      - Replace inefficient query patterns with optimized alternatives
 Add telemetry enhancements:
-     - Add custom spans to measure the performance of optimized operations
-     - Include relevant business metrics in span attributes
+     - Add appropriate instrumentation to measure the performance of optimized operations
+     - Include relevant business metrics in performance tracking
      - Enhance error tracking for database operations
-     - Add database-specific attributes for better observability
 Generate validation tests:
      - Create test cases to validate optimized operations
      - Include performance assertions to prevent regressions
