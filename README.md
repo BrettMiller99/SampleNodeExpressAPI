@@ -1,4 +1,4 @@
-# Database Schema Changes - Repo Link
+# Database Schema Changes
 
 ## 1 · Problem Statement
 
