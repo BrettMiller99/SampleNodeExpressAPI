@@ -11,10 +11,10 @@
   "license": "ISC",
   "devDependencies": {
     "autocannon": "^8.0.0",
-    "faker": "^5.5.3",
     "pino-pretty": "^13.0.0"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.8.0",
     "express": "^4.17.1",
     "mongoose": "^5.10.15",
     "sequelize": "^6.37.7",
