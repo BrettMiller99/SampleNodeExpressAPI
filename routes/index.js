@@ -10,6 +10,10 @@ router.post('/users', UserController.createUser);
 router.put('/users/:id', UserController.updateUser);
 router.delete('/users/:id', UserController.deleteUser);
 
+// Additional routes for soft delete functionality
+router.delete('/users/:id/permanent', UserController.permanentlyDeleteUser);
+router.post('/users/:id/restore', UserController.restoreUser);
+
 // Health check endpoint with OpenTelemetry integration
 router.get('/health', async (req, res, next) => {
   try {
