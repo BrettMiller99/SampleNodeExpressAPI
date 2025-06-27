@@ -3,8 +3,6 @@ const router = express.Router();
 const UserController = require('../controllers/UserController');
 const sequelize = require('../config/database');
 const { checkHealth } = require('../utils/healthCheck');
-const { createSpan } = require('../tracing');
-
 // User routes with OpenTelemetry instrumentation
 router.get('/users', UserController.getUsers);
 router.get('/users/:id', UserController.getUser);
@@ -15,14 +13,8 @@ router.delete('/users/:id', UserController.deleteUser);
 // Health check endpoint with OpenTelemetry integration
 router.get('/health', async (req, res, next) => {
   try {
-    return await createSpan('Health Check API', async () => {
-      const health = await checkHealth({ database: sequelize });
-      res.json(health);
-    }, {
-      'http.method': 'GET',
-      'http.route': '/health',
-      'operation.type': 'health_check'
-    });
+    const health = await checkHealth({ database: sequelize });
+    res.json(health);
   } catch (error) {
     next(error);
   }
@@ -34,7 +26,6 @@ router.use((req, res, next) => {
                         req.headers['x-request-id'] || 
                         `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
   
-  // Make correlation ID available to all spans in this request
   req.correlationId = correlationId;
   
   // Add correlation ID to response headers

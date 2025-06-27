@@ -1,6 +1,3 @@
-// Initialize OpenTelemetry before importing other modules
-require('./tracing');
-
 const express = require('express');
 const sequelize = require('./config/database');
 const routes = require('./routes');

@@ -1,5 +1,4 @@
 // Health check utility with OpenTelemetry integration
-const { trace } = require('@opentelemetry/api');
 
 /**
  * Health check function that creates a span for monitoring

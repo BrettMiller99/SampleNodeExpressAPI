@@ -60,7 +60,7 @@ This workflow guides Cascade through a comprehensive process for instrumenting a
 2. **Propose Instrumentation Plan:**  
    - Based on your analysis, create a detailed instrumentation plan. This plan must include:  
      - A list of required OpenTelemetry packages to be installed.  
-     - The creation of a central `tracing.js` (or equivalent) configuration file.  
+
      - Modifications needed for the application's entry point to initialize tracing.  
      - Specific recommendations for adding custom spans to critical business functions (e.g., `createUser`, `processPayment`), including suggested attributes for each span.
 
@@ -122,13 +122,13 @@ As you enter the prompt, explain what's happening:
 
 Cascade will then use its tools to explore the project and generate a step-by-step plan. You can highlight this on screen and say:
 
-> "As you can see, Cascade has created a clear, actionable plan. It's identified the need to install specific OTEL packages, create a dedicated `tracing.js` file for configuration, and modify our main `app.js` file. This looks great, so let's tell it to proceed."
+
 
 #### Step 2: Automated Implementation
 
-Now, it's time to execute the plan. You can show the rapid sequence of Cascade's actions: modifying `package.json`, creating `tracing.js`, and updating `app.js`.
 
-> "With our approval, Cascade gets to work. It adds the required dependencies to `package.json`, generates the core `tracing.js` file to initialize the OpenTelemetry SDK, and modifies our application's entry point. It even adds a custom span to our 'create user' route to trace that specific operation, all without us writing a single line of code."
+
+
 
 #### Step 3: Verification and Seeing the Results
 
