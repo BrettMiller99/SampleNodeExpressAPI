@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const readline = require('readline');
+
 
 // Function to run a script and return a promise
 function runScript(scriptPath) {
@@ -34,18 +34,7 @@ async function runAllTests() {
     console.log('\nNOTE: Make sure the server is running on http://localhost:3000 before continuing.');
     console.log('You can start the server in another terminal with: node app.js\n');
     
-    // Wait for user confirmation
-    await new Promise(resolve => {
-      console.log('Press Enter to continue...');
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-      rl.question('', () => {
-        rl.close();
-        resolve();
-      });
-    });
+
     
     // Run API endpoint tests
     await runScript(path.join(__dirname, 'run-tests.js'));
